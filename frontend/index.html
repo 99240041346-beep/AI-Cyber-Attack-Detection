@@ -1,50 +1,1438 @@
-async function devices() {
+<!DOCTYPE html>
 
-    scans = await api('/api/scans');
+<html>
 
-    $('view').innerHTML = `
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Smart Cyber Forensic Pro
+</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            #162c55,
+            #050814 55%
+        );
+
+    color: #eaf2ff;
+
+    font-family:
+        Inter,
+        Segoe UI,
+        Arial,
+        sans-serif;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+.muted {
+    color: #91a3c1;
+}
+
+
+.warn {
+    color: #ff617e;
+    font-weight: 800;
+}
+
+
+.ok {
+    color: #43df9e;
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   LOGIN
+   ========================================================== */
+
+.login {
+
+    min-height: 100vh;
+
+    display: grid;
+
+    place-items: center;
+
+    perspective: 1400px;
+
+    padding: 20px;
+}
+
+
+.card3d {
+
+    width: 440px;
+
+    max-width: 100%;
+
+    padding: 40px;
+
+    border:
+        1px solid
+        #36517e;
+
+    border-radius: 25px;
+
+    background:
+        rgba(
+            11,
+            19,
+            38,
+            0.88
+        );
+
+    box-shadow:
+        0 35px 90px
+        rgba(0,0,0,.8);
+
+    transform:
+        rotateX(5deg)
+        rotateY(-3deg);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+
+.logo {
+
+    width: 76px;
+
+    height: 76px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #46e7ff,
+            #8d69ff
+        );
+
+    color: #06101b;
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    box-shadow:
+        0 0 35px
+        rgba(70,231,255,.35);
+}
+
+
+h1 {
+    margin: 18px 0 6px;
+}
+
+
+.field {
+    margin: 18px 0;
+}
+
+
+.field label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #b9c9e3;
+}
+
+
+.field input {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid
+        #253858;
+
+    background:
+        #060b16;
+
+    color: white;
+
+    outline: none;
+}
+
+
+.btn {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #46e7ff,
+            #7387ff
+        );
+
+    color: #06101b;
+
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+
+.btn:hover {
+    opacity: .9;
+}
+
+
+.btn:disabled {
+    opacity: .5;
+    cursor: wait;
+}
+
+
+/* ==========================================================
+   APPLICATION
+   ========================================================== */
+
+.app {
+
+    display: grid;
+
+    grid-template-columns:
+        240px
+        1fr;
+
+    min-height: 100vh;
+}
+
+
+.side {
+
+    background:
+        rgba(
+            6,
+            11,
+            23,
+            .96
+        );
+
+    border-right:
+        1px solid
+        #223252;
+
+    padding: 20px;
+}
+
+
+.brand {
+
+    font-weight: 900;
+
+    font-size: 17px;
+
+    margin-bottom: 30px;
+}
+
+
+.brand b {
+
+    display: inline-grid;
+
+    place-items: center;
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #46e7ff,
+            #8d69ff
+        );
+
+    color: #04101a;
+
+    margin-right: 8px;
+}
+
+
+.nav button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin: 3px 0;
+
+    text-align: left;
+
+    background: none;
+
+    border: 0;
+
+    color: #91a3c1;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+}
+
+
+.nav button:hover,
+.nav button.active {
+
+    background:
+        #111d35;
+
+    color: white;
+}
+
+
+.main {
+
+    padding: 26px;
+
+    max-width: 1600px;
+
+    width: 100%;
+
+    margin: auto;
+}
+
+
+.top {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.pill {
+
+    padding: 7px 10px;
+
+    border-radius: 20px;
+
+    background:
+        #10253b;
+
+    color:
+        #46e7ff;
+
+    font-size: 11px;
+}
+
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            1fr
+        );
+
+    gap: 12px;
+}
+
+
+.box {
+
+    background:
+        #0c1528;
+
+    border:
+        1px solid
+        #223252;
+
+    border-radius: 14px;
+
+    padding: 16px;
+}
+
+
+.num {
+
+    font-size: 27px;
+
+    font-weight: 900;
+
+    margin-top: 5px;
+}
+
+
+.section {
+    margin-top: 18px;
+}
+
+
+.tablewrap {
+
+    overflow: auto;
+
+    border:
+        1px solid
+        #223252;
+
+    border-radius: 13px;
+}
+
+
+.table {
+
+    width: 100%;
+
+    border-collapse:
+        collapse;
+
+    min-width: 850px;
+}
+
+
+.table th,
+.table td {
+
+    padding: 11px;
+
+    border-bottom:
+        1px solid
+        #1a2945;
+
+    text-align: left;
+}
+
+
+.table th {
+
+    color: #8fa7cb;
+
+    background:
+        #091222;
+}
+
+
+.click {
+
+    color:
+        #46e7ff;
+
+    cursor:
+        pointer;
+}
+
+
+.pre {
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
+
+    max-height:
+        520px;
+
+    overflow:
+        auto;
+
+    background:
+        #050a14;
+
+    padding:
+        14px;
+
+    border-radius:
+        9px;
+}
+
+
+.toolbar {
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 12px;
+}
+
+
+.toolbar input,
+.toolbar select {
+
+    padding: 10px;
+
+    background:
+        #080f1d;
+
+    border:
+        1px solid
+        #223252;
+
+    color: white;
+
+    border-radius:
+        9px;
+}
+
+
+@media (
+    max-width: 900px
+) {
+
+    .app {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .side {
+
+        border-right:
+            0;
+
+        border-bottom:
+            1px solid
+            #223252;
+    }
+
+
+    .nav {
+
+        display: flex;
+
+        overflow-x: auto;
+    }
+
+
+    .nav button {
+
+        white-space:
+            nowrap;
+
+        width:
+            auto;
+    }
+
+
+    .grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOGIN
+     ========================================================= -->
+
+<div
+    id="login"
+    class="login"
+>
+
+    <div class="card3d">
+
+        <div class="logo">
+            SF
+        </div>
+
+
+        <h1>
+            Smart Cyber
+            Forensic Pro
+        </h1>
+
+
+        <div class="muted">
+
+            Advanced Android
+            Cyber Analysis Console
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Analyst ID
+            </label>
+
+            <input
+                id="analyst"
+                type="text"
+                placeholder="Analyst"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Console Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Password"
+            >
+
+        </div>
+
+
+        <button
+            class="btn"
+            onclick="enterConsole()"
+        >
+
+            ENTER SECURE CONSOLE
+
+        </button>
+
+
+        <p class="muted">
+
+            Authorized forensic use only.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN APPLICATION
+     ========================================================= -->
+
+<div
+    id="app"
+    class="app hidden"
+>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="side">
+
+        <div class="brand">
+
+            <b>
+                SF
+            </b>
+
+            Forensic Pro
+
+        </div>
+
+
+        <div class="nav">
+
+            <button
+                data-view="dashboard"
+                onclick="loadView('dashboard')"
+            >
+                ◈ Dashboard
+            </button>
+
+
+            <button
+                data-view="devices"
+                onclick="loadView('devices')"
+            >
+                ◉ ADB / Devices
+            </button>
+
+
+            <button
+                data-view="contacts"
+                onclick="loadView('contacts')"
+            >
+                ◎ Contacts
+            </button>
+
+
+            <button
+                data-view="sms"
+                onclick="loadView('sms')"
+            >
+                ▣ SMS
+            </button>
+
+
+            <button
+                data-view="apps"
+                onclick="loadView('apps')"
+            >
+                ◫ Applications
+            </button>
+
+
+            <button
+                data-view="runtime"
+                onclick="loadView('runtime')"
+            >
+                ◌ Runtime
+            </button>
+
+
+            <button
+                data-view="security"
+                onclick="loadView('security')"
+            >
+                ◇ Security
+            </button>
+
+
+            <button
+                data-view="cases"
+                onclick="loadView('cases')"
+            >
+                ▤ Cases
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <div class="top">
+
+            <div>
+
+                <h2 id="title">
+                    Command Dashboard
+                </h2>
+
+                <div class="muted">
+                    Evidence-first Android cyber analysis
+                </div>
+
+            </div>
+
+
+            <div class="pill">
+
+                ADB AGENT
+                •
+                CLOUD CONSOLE
+
+            </div>
+
+        </div>
+
+
+        <div id="view"></div>
+
+
+    </main>
+
+</div>
+
+
+<script>
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let scans = [];
+
+let selected = null;
+
+
+// ============================================================
+// SHORT HELPERS
+// ============================================================
+
+function $(id) {
+
+    return document.getElementById(
+        id
+    );
+
+}
+
+
+function esc(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /[&<>"]/g,
+        character => {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// LOGIN
+// ============================================================
+
+function enterConsole() {
+
+    const analyst =
+        $("analyst").value.trim();
+
+
+    if (!analyst) {
+
+        alert(
+            "Please enter Analyst ID."
+        );
+
+        return;
+    }
+
+
+    $("login")
+        .classList
+        .add("hidden");
+
+
+    $("app")
+        .classList
+        .remove("hidden");
+
+
+    loadView(
+        "dashboard"
+    );
+}
+
+
+// ============================================================
+// API
+// ============================================================
+
+async function api(
+    url,
+    options = {}
+) {
+
+    const response =
+        await fetch(
+            url,
+            options
+        );
+
+
+    if (!response.ok) {
+
+        const text =
+            await response.text();
+
+        throw new Error(
+            text ||
+            "API request failed."
+        );
+    }
+
+
+    return response.json();
+}
+
+
+// ============================================================
+// METRIC CARD
+// ============================================================
+
+function metric(
+    title,
+    number
+) {
+
+    return `
+
         <div class="box">
 
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                gap:15px;
-                flex-wrap:wrap;
-            ">
+            <div class="muted">
+
+                ${title}
+
+            </div>
+
+            <div class="num">
+
+                ${number}
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// CASE TABLE
+// ============================================================
+
+function caseTable(
+    cases
+) {
+
+    if (!cases.length) {
+
+        return `
+
+            <div class="muted">
+
+                No forensic cases available.
+
+            </div>
+
+        `;
+    }
+
+
+    return `
+
+        <div class="tablewrap">
+
+            <table class="table">
+
+                <tr>
+
+                    <th>
+                        Case
+                    </th>
+
+                    <th>
+                        Device
+                    </th>
+
+                    <th>
+                        Android
+                    </th>
+
+                    <th>
+                        Contacts
+                    </th>
+
+                    <th>
+                        SMS
+                    </th>
+
+                    <th>
+                        Apps
+                    </th>
+
+                    <th>
+                        Flags
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+
+                ${cases.map(
+                    item => `
+
+                    <tr>
+
+                        <td>
+                            ${esc(
+                                item.case_id
+                            )}
+                        </td>
+
+                        <td>
+
+                            ${esc(
+                                (
+                                    item.manufacturer ||
+                                    ""
+                                )
+                                +
+                                " "
+                                +
+                                (
+                                    item.model ||
+                                    ""
+                                )
+                            )}
+
+                        </td>
+
+                        <td>
+                            ${esc(
+                                item.android
+                            )}
+                        </td>
+
+                        <td>
+                            ${item.contacts_count}
+                        </td>
+
+                        <td>
+                            ${item.sms_count}
+                        </td>
+
+                        <td>
+                            ${item.packages_count}
+                        </td>
+
+                        <td class="${
+                            item.suspicious_count
+                            ? "warn"
+                            : "ok"
+                        }">
+
+                            ${
+                                item.suspicious_count
+                            }
+
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="click"
+                                onclick="openCase(
+                                    ${item.id}
+                                )"
+                            >
+
+                                OPEN
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                `
+                ).join("")}
+
+            </table>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// LOAD VIEW
+// ============================================================
+
+async function loadView(
+    view
+) {
+
+    document
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.view === view
+                );
+
+            }
+        );
+
+
+    const titles = {
+
+        dashboard:
+            "Command Dashboard",
+
+        devices:
+            "ADB / Device Acquisition",
+
+        contacts:
+            "Contacts Intelligence",
+
+        sms:
+            "SMS Intelligence",
+
+        apps:
+            "Application Analysis",
+
+        runtime:
+            "Runtime & Surveillance Indicators",
+
+        security:
+            "Security Posture",
+
+        cases:
+            "Case History"
+    };
+
+
+    $("title").textContent =
+        titles[view] ||
+        "Smart Cyber Forensic Pro";
+
+
+    try {
+
+        if (
+            view ===
+            "dashboard"
+        ) {
+
+            await dashboard();
+
+            return;
+        }
+
+
+        if (
+            view ===
+            "devices"
+        ) {
+
+            await devices();
+
+            return;
+        }
+
+
+        if (
+            view ===
+            "cases"
+        ) {
+
+            await cases();
+
+            return;
+        }
+
+
+        if (
+            view ===
+            "apps"
+        ) {
+
+            await applications();
+
+            return;
+        }
+
+
+        if (
+            view ===
+            "runtime"
+        ) {
+
+            await runtime();
+
+            return;
+        }
+
+
+        if (
+            view ===
+            "security"
+        ) {
+
+            await security();
+
+            return;
+        }
+
+
+        await artifact(
+            view
+        );
+
+    }
+    catch (error) {
+
+        $("view").innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    ERROR
+
+                </div>
+
+                <p>
+
+                    ${esc(
+                        error.message
+                    )}
+
+                </p>
+
+            </div>
+
+        `;
+
+    }
+}
+
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+
+async function dashboard() {
+
+    const stats =
+        await api(
+            "/api/stats"
+        );
+
+
+    scans =
+        await api(
+            "/api/scans"
+        );
+
+
+    $("view").innerHTML = `
+
+        <div class="grid">
+
+            ${metric(
+                "Cases",
+                stats.scans
+            )}
+
+            ${metric(
+                "Contacts",
+                stats.contacts
+            )}
+
+            ${metric(
+                "SMS",
+                stats.sms
+            )}
+
+            ${metric(
+                "Applications",
+                stats.applications
+            )}
+
+            ${metric(
+                "Running",
+                stats.running
+            )}
+
+            ${metric(
+                "Triage Flags",
+                stats.suspicious
+            )}
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>
+                Recent Forensic Cases
+            </h3>
+
+            ${caseTable(
+                scans.slice(
+                    0,
+                    10
+                )
+            )}
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// CASES
+// ============================================================
+
+async function cases() {
+
+    scans =
+        await api(
+            "/api/scans"
+        );
+
+
+    $("view").innerHTML = `
+
+        <div class="box">
+
+            <h3>
+                Forensic Case History
+            </h3>
+
+            ${caseTable(
+                scans
+            )}
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// ADB DEVICES PAGE
+// ============================================================
+
+async function devices() {
+
+    scans =
+        await api(
+            "/api/scans"
+        );
+
+
+    $("view").innerHTML = `
+
+        <div class="box">
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    flex-wrap:wrap;
+                    gap:15px;
+                "
+            >
 
                 <div>
-                    <h3>ADB Device Connection</h3>
+
+                    <h3>
+                        ADB Device Connection
+                    </h3>
 
                     <div class="muted">
-                        Local forensic agent connection
+
+                        Local Android
+                        forensic agent
+
                     </div>
-                </div>
-
-                <div>
-
-                    <button
-                        class="btn"
-                        style="width:auto;padding:10px 18px"
-                        onclick="refreshADB()">
-
-                        🔄 Refresh ADB
-
-                    </button>
 
                 </div>
+
+
+                <button
+                    id="refreshAdbButton"
+                    class="btn"
+                    style="
+                        width:auto;
+                        padding:
+                            10px 20px;
+                    "
+                    onclick="refreshADB()"
+                >
+
+                    🔄 Refresh ADB
+
+                </button>
 
             </div>
 
 
             <div
                 id="adbStatus"
-                class="section">
+                class="section"
+            >
 
                 <div class="box">
 
                     <div class="muted">
-                        Checking ADB...
+
+                        🔄 Checking ADB...
+
                     </div>
 
                 </div>
@@ -56,9 +1444,14 @@ async function devices() {
 
         <div class="section box">
 
-            <h3>ADB Setup</h3>
+            <h3>
+                ADB Diagnostic Commands
+            </h3>
 
-            <pre class="pre">adb devices
+
+            <pre class="pre">adb version
+
+adb devices
 
 adb shell getprop ro.product.model
 
@@ -69,21 +1462,1647 @@ adb shell getprop ro.build.version.release</pre>
 
         <div class="section box">
 
-            <h3>Previously Acquired Devices</h3>
+            <h3>
+                Previously Acquired Devices
+            </h3>
 
-            ${table(scans)}
+            ${caseTable(
+                scans
+            )}
 
         </div>
+
     `;
+
 
     await refreshADB();
 
-    if (window.adbRefreshTimer) {
-        clearInterval(window.adbRefreshTimer);
+
+    /*
+     * Automatic refresh every 5 seconds.
+     */
+
+    if (
+        window.adbRefreshTimer
+    ) {
+
+        clearInterval(
+            window.adbRefreshTimer
+        );
+
     }
 
-    window.adbRefreshTimer = setInterval(
-        refreshADB,
-        5000
+
+    window.adbRefreshTimer =
+        setInterval(
+            refreshADB,
+            5000
+        );
+}
+
+
+// ============================================================
+// REFRESH ADB
+// ============================================================
+
+async function refreshADB() {
+
+    const statusBox =
+        document.getElementById(
+            "adbStatus"
+        );
+
+
+    const refreshButton =
+        document.getElementById(
+            "refreshAdbButton"
+        );
+
+
+    if (!statusBox) {
+
+        return;
+    }
+
+
+    if (refreshButton) {
+
+        refreshButton.disabled =
+            true;
+
+        refreshButton.innerText =
+            "⏳ Checking ADB...";
+
+    }
+
+
+    statusBox.innerHTML = `
+
+        <div class="box">
+
+            <div class="muted">
+
+                🔄 Refreshing ADB...
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    try {
+
+        /*
+         * IMPORTANT:
+         *
+         * This is localhost because
+         * the ADB agent runs on the
+         * analyst computer.
+         */
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:8765/api/adb/status",
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Local ADB agent is not responding."
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        renderADBStatus(
+            data
+        );
+
+    }
+    catch (error) {
+
+        statusBox.innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    🔴 ADB AGENT OFFLINE
+
+                </div>
+
+
+                <p>
+
+                    ${esc(
+                        error.message
+                    )}
+
+                </p>
+
+
+                <p class="muted">
+
+                    Start the local agent
+                    on the computer connected
+                    to the Android phone:
+
+                </p>
+
+
+                <pre class="pre">cd agent
+
+python agent_server.py</pre>
+
+
+                <button
+                    class="btn"
+                    style="width:auto"
+                    onclick="refreshADB()"
+                >
+
+                    🔄 Try Again
+
+                </button>
+
+            </div>
+
+        `;
+
+    }
+    finally {
+
+        if (refreshButton) {
+
+            refreshButton.disabled =
+                false;
+
+            refreshButton.innerText =
+                "🔄 Refresh ADB";
+
+        }
+
+    }
+}
+
+
+// ============================================================
+// RENDER ADB STATUS
+// ============================================================
+
+function renderADBStatus(
+    data
+) {
+
+    const box =
+        document.getElementById(
+            "adbStatus"
+        );
+
+
+    if (!box) {
+
+        return;
+    }
+
+
+    /*
+     * ADB NOT AVAILABLE
+     */
+
+    if (
+        !data.adb_available
+    ) {
+
+        box.innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    🔴 ADB NOT INSTALLED
+
+                </div>
+
+
+                <p>
+
+                    ${esc(
+                        data.error ||
+                        "ADB is unavailable."
+                    )}
+
+                </p>
+
+
+                <p class="muted">
+
+                    Install Android Platform
+                    Tools and add adb to PATH.
+
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /*
+     * UNAUTHORIZED
+     */
+
+    if (
+        data.unauthorized_devices > 0
+        &&
+        data.authorized_devices === 0
+    ) {
+
+        box.innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    🟠 USB DEBUGGING
+                    UNAUTHORIZED
+
+                </div>
+
+
+                <p>
+
+                    ${esc(
+                        data.error
+                    )}
+
+                </p>
+
+
+                <p class="muted">
+
+                    Unlock your Android phone
+                    and accept the RSA
+                    USB debugging authorization.
+
+                </p>
+
+
+                <button
+                    class="btn"
+                    style="width:auto"
+                    onclick="refreshADB()"
+                >
+
+                    🔄 Check Again
+
+                </button>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /*
+     * OFFLINE
+     */
+
+    if (
+        data.offline_devices > 0
+        &&
+        data.authorized_devices === 0
+    ) {
+
+        box.innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    🟠 DEVICE OFFLINE
+
+                </div>
+
+
+                <p>
+
+                    ${esc(
+                        data.error
+                    )}
+
+                </p>
+
+
+                <button
+                    class="btn"
+                    style="width:auto"
+                    onclick="refreshADB()"
+                >
+
+                    🔄 Refresh
+
+                </button>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /*
+     * DISCONNECTED
+     */
+
+    if (
+        data.authorized_devices === 0
+    ) {
+
+        box.innerHTML = `
+
+            <div class="box">
+
+                <div class="warn">
+
+                    🔴 DISCONNECTED
+
+                </div>
+
+
+                <p>
+
+                    ${esc(
+                        data.error ||
+                        "No Android device detected."
+                    )}
+
+                </p>
+
+
+                <p class="muted">
+
+                    Connect the phone with USB
+                    and enable USB debugging.
+
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /*
+     * CONNECTED
+     */
+
+    const device =
+        data.device || {};
+
+
+    box.innerHTML = `
+
+        <div class="grid">
+
+            ${metric(
+                "Status",
+                '<span class="ok">CONNECTED</span>'
+            )}
+
+
+            ${metric(
+                "ADB Devices",
+                data.connected_devices
+            )}
+
+
+            ${metric(
+                "Authorized",
+                data.authorized_devices
+            )}
+
+
+            ${metric(
+                "Serial",
+                esc(
+                    device.serial ||
+                    "N/A"
+                )
+            )}
+
+
+            ${metric(
+                "Manufacturer",
+                esc(
+                    device.manufacturer ||
+                    "N/A"
+                )
+            )}
+
+
+            ${metric(
+                "Android",
+                esc(
+                    device.android ||
+                    "N/A"
+                )
+            )}
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>
+
+                🟢 Android Device Connected
+
+            </h3>
+
+
+            <table class="table">
+
+                <tr>
+
+                    <th>
+                        ADB Status
+                    </th>
+
+                    <td class="ok">
+
+                        ✓ CONNECTED
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Authorization
+                    </th>
+
+                    <td class="ok">
+
+                        ✓ AUTHORIZED
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Device Serial
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.serial ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Manufacturer
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.manufacturer ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Model
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.model ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Android Version
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.android ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Android SDK
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.sdk ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Security Patch
+                    </th>
+
+                    <td>
+
+                        ${esc(
+                            device.security_patch ||
+                            "N/A"
+                        )}
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Connected Devices
+                    </th>
+
+                    <td>
+
+                        ${data.connected_devices}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                    margin-top:20px;
+                "
+            >
+
+                <button
+                    id="startScanButton"
+                    class="btn"
+                    style="width:auto"
+                    onclick="startADBScan()"
+                >
+
+                    ▶ Start Scan
+
+                </button>
+
+
+                <button
+                    class="btn"
+                    style="width:auto"
+                    onclick="refreshADB()"
+                >
+
+                    🔄 Refresh ADB
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// START ADB SCAN
+// ============================================================
+
+async function startADBScan() {
+
+    const button =
+        document.getElementById(
+            "startScanButton"
+        );
+
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.innerText =
+            "⏳ Scanning Device...";
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:8765/api/adb/scan",
+                {
+                    method: "POST"
+                }
+            );
+
+
+        let data;
+
+
+        try {
+
+            data =
+                await response.json();
+
+        }
+        catch {
+
+            throw new Error(
+                "Invalid response from local ADB agent."
+            );
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Forensic scan failed."
+            );
+        }
+
+
+        alert(
+
+            "FORENSIC SCAN COMPLETED\n\n"
+
+            +
+
+            "Contacts: "
+            +
+            data.contacts
+
+            +
+
+            "\nSMS: "
+            +
+            data.sms
+
+            +
+
+            "\nApplications: "
+            +
+            data.applications
+
+            +
+
+            "\nRunning Processes: "
+            +
+            data.running
+
+            +
+
+            "\nSuspicious Indicators: "
+            +
+            data.suspicious
+
+        );
+
+
+        scans =
+            await api(
+                "/api/scans"
+            );
+
+
+        if (
+            data.result
+            &&
+            data.result.scan_id
+        ) {
+
+            selected =
+                data.result.scan_id;
+
+        }
+
+
+        await loadView(
+            "dashboard"
+        );
+
+    }
+    catch (error) {
+
+        alert(
+
+            "SCAN ERROR\n\n"
+            +
+            error.message
+
+        );
+
+    }
+    finally {
+
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.innerText =
+                "▶ Start Scan";
+
+        }
+
+    }
+}
+
+
+// ============================================================
+// CONTACTS / SMS
+// ============================================================
+
+async function artifact(
+    view
+) {
+
+    if (
+        !scans.length
+    ) {
+
+        scans =
+            await api(
+                "/api/scans"
+            );
+
+    }
+
+
+    if (
+        !scans.length
+    ) {
+
+        $("view").innerHTML = `
+
+            <div class="box">
+
+                <h3>
+                    No forensic scan
+                </h3>
+
+                <p class="muted">
+
+                    Connect an authorized
+                    Android device and run
+                    Start Scan first.
+
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    if (!selected) {
+
+        selected =
+            scans[0].id;
+
+    }
+
+
+    const type =
+        view === "contacts"
+            ? "contacts"
+            : "sms";
+
+
+    const data =
+        await api(
+            `/api/scans/${selected}/${type}`
+        );
+
+
+    const records =
+        type === "contacts"
+            ? data.contacts
+            : data.sms;
+
+
+    $("view").innerHTML = `
+
+        <div class="toolbar">
+
+            <select
+                onchange="
+                    selected =
+                        Number(this.value);
+                    loadView('${view}');
+                "
+            >
+
+                ${scans.map(
+                    item => `
+
+                    <option
+                        value="${item.id}"
+                        ${
+                            item.id === selected
+                            ? "selected"
+                            : ""
+                        }
+                    >
+
+                        ${esc(
+                            item.case_id
+                        )}
+
+                    </option>
+
+                `
+                ).join("")}
+
+            </select>
+
+
+            <input
+                id="artifactSearch"
+                placeholder="Search..."
+                oninput="
+                    filterArtifact()
+                "
+            >
+
+        </div>
+
+
+        <div class="box">
+
+            <h3>
+
+                ${view.toUpperCase()}
+
+                <span class="pill">
+
+                    ${records.length}
+
+                </span>
+
+            </h3>
+
+
+            <div
+                id="artifactRows"
+            ></div>
+
+        </div>
+
+    `;
+
+
+    window.currentArtifacts =
+        records;
+
+
+    renderArtifacts(
+        records
     );
 }
+
+
+// ============================================================
+// RENDER CONTACTS/SMS
+// ============================================================
+
+function renderArtifacts(
+    records
+) {
+
+    if (!records.length) {
+
+        $("artifactRows").innerHTML = `
+
+            <div class="muted">
+
+                No accessible records.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    $("artifactRows").innerHTML = `
+
+        <div class="tablewrap">
+
+            <table class="table">
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Record
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+
+                ${records.map(
+                    (record, index) => `
+
+                    <tr>
+
+                        <td>
+                            ${index + 1}
+                        </td>
+
+                        <td>
+
+                            ${esc(
+                                typeof record === "string"
+                                    ? record
+                                    : JSON.stringify(
+                                        record
+                                    )
+                            )}
+
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="click"
+                                onclick='
+                                    showRecord(
+                                        ${JSON.stringify(
+                                            record
+                                        ).replace(
+                                            /'/g,
+                                            "&#39;"
+                                        )}
+                                    )
+                                '
+                            >
+
+                                OPEN
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                `
+                ).join("")}
+
+            </table>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// SEARCH CONTACTS / SMS
+// ============================================================
+
+function filterArtifact() {
+
+    const input =
+        document.getElementById(
+            "artifactSearch"
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const query =
+        input.value
+        .toLowerCase();
+
+
+    const filtered =
+        (
+            window.currentArtifacts
+            || []
+        )
+        .filter(
+            item =>
+                JSON.stringify(
+                    item
+                )
+                .toLowerCase()
+                .includes(
+                    query
+                )
+        );
+
+
+    renderArtifacts(
+        filtered
+    );
+}
+
+
+// ============================================================
+// RECORD DETAILS
+// ============================================================
+
+function showRecord(
+    record
+) {
+
+    const container =
+        document.getElementById(
+            "artifactRows"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.insertAdjacentHTML(
+        "beforeend",
+        `
+
+        <div
+            class="section box"
+        >
+
+            <h3>
+                Record Details
+            </h3>
+
+
+            <pre class="pre">${esc(
+                JSON.stringify(
+                    record,
+                    null,
+                    2
+                )
+            )}</pre>
+
+        </div>
+
+        `
+    );
+}
+
+
+// ============================================================
+// APPLICATIONS
+// ============================================================
+
+async function applications() {
+
+    if (!scans.length) {
+
+        scans =
+            await api(
+                "/api/scans"
+            );
+
+    }
+
+
+    if (!scans.length) {
+
+        $("view").innerHTML =
+            '<div class="box">No scan uploaded.</div>';
+
+        return;
+    }
+
+
+    if (!selected) {
+
+        selected =
+            scans[0].id;
+
+    }
+
+
+    const data =
+        await api(
+            `/api/scans/${selected}/applications`
+        );
+
+
+    $("view").innerHTML = `
+
+        <div class="grid">
+
+            ${metric(
+                "Applications",
+                data.count
+            )}
+
+            ${metric(
+                "Heuristic Flags",
+                data.suspicious.length
+            )}
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>
+                Installed Applications
+            </h3>
+
+            <pre class="pre">${esc(
+                JSON.stringify(
+                    data.applications,
+                    null,
+                    2
+                )
+            )}</pre>
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>
+                Suspicious Indicators
+            </h3>
+
+            <pre class="pre">${esc(
+                JSON.stringify(
+                    data.suspicious,
+                    null,
+                    2
+                )
+            )}</pre>
+
+
+            <div class="muted">
+
+                Package-name indicators
+                require analyst validation
+                and do not by themselves prove
+                malware.
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// RUNTIME
+// ============================================================
+
+async function runtime() {
+
+    if (!scans.length) {
+
+        scans =
+            await api(
+                "/api/scans"
+            );
+
+    }
+
+
+    if (!scans.length) {
+
+        $("view").innerHTML =
+            '<div class="box">No scan uploaded.</div>';
+
+        return;
+    }
+
+
+    if (!selected) {
+
+        selected =
+            scans[0].id;
+
+    }
+
+
+    const data =
+        await api(
+            `/api/scans/${selected}/analysis`
+        );
+
+
+    $("view").innerHTML = `
+
+        <div class="grid">
+
+            ${metric(
+                "Running",
+                data.running_processes.length
+            )}
+
+            ${metric(
+                "Accessibility",
+                data.accessibility_services.length
+            )}
+
+            ${metric(
+                "Device Admin",
+                data.device_admins.length
+            )}
+
+            ${metric(
+                "Network",
+                data.network_connections.length
+            )}
+
+            ${metric(
+                "Findings",
+                data.findings.length
+            )}
+
+        </div>
+
+
+        ${block(
+            "Running Processes",
+            data.running_processes
+        )}
+
+
+        ${block(
+            "Accessibility Services",
+            data.accessibility_services
+        )}
+
+
+        ${block(
+            "Device Administration",
+            data.device_admins
+        )}
+
+
+        ${block(
+            "Network Connections",
+            data.network_connections
+        )}
+
+
+        ${block(
+            "Findings",
+            data.findings
+        )}
+
+
+        ${block(
+            "Collection Errors",
+            data.errors
+        )}
+
+    `;
+}
+
+
+// ============================================================
+// SECURITY
+// ============================================================
+
+async function security() {
+
+    if (!scans.length) {
+
+        scans =
+            await api(
+                "/api/scans"
+            );
+
+    }
+
+
+    if (!scans.length) {
+
+        $("view").innerHTML =
+            '<div class="box">No scan uploaded.</div>';
+
+        return;
+    }
+
+
+    if (!selected) {
+
+        selected =
+            scans[0].id;
+
+    }
+
+
+    const data =
+        await api(
+            `/api/scans/${selected}/analysis`
+        );
+
+
+    const device =
+        data.device || {};
+
+
+    $("view").innerHTML = `
+
+        <div class="grid">
+
+            ${metric(
+                "Android",
+                esc(
+                    device.android ||
+                    "N/A"
+                )
+            )}
+
+            ${metric(
+                "Security Patch",
+                esc(
+                    device.security_patch ||
+                    "N/A"
+                )
+            )}
+
+            ${metric(
+                "SELinux",
+                esc(
+                    device.selinux ||
+                    "N/A"
+                )
+            )}
+
+            ${metric(
+                "Verified Boot",
+                esc(
+                    device.verified_boot ||
+                    "N/A"
+                )
+            )}
+
+            ${metric(
+                "Encryption",
+                esc(
+                    device.encryption ||
+                    "N/A"
+                )
+            )}
+
+        </div>
+
+
+        ${block(
+            "Device Security Properties",
+            [device]
+        )}
+
+
+        ${block(
+            "Analyst Findings",
+            data.findings
+        )}
+
+    `;
+}
+
+
+// ============================================================
+// GENERIC BLOCK
+// ============================================================
+
+function block(
+    title,
+    data
+) {
+
+    return `
+
+        <div class="section box">
+
+            <h3>
+
+                ${title}
+
+                <span class="pill">
+
+                    ${
+                        Array.isArray(data)
+                            ? data.length
+                            : 1
+                    }
+
+                </span>
+
+            </h3>
+
+
+            <pre class="pre">${esc(
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
+            )}</pre>
+
+        </div>
+
+    `;
+}
+
+
+// ============================================================
+// OPEN CASE
+// ============================================================
+
+async function openCase(
+    id
+) {
+
+    selected =
+        Number(id);
+
+
+    const data =
+        await api(
+            `/api/scans/${id}`
+        );
+
+
+    $("title").textContent =
+        "Case " +
+        data.case_id;
+
+
+    $("view").innerHTML = `
+
+        <div class="toolbar">
+
+            <span
+                class="click"
+                onclick="
+                    loadView('cases')
+                "
+            >
+
+                ← CASES
+
+            </span>
+
+
+            <a
+                href="/api/scans/${id}/export"
+                class="pill"
+            >
+
+                EXPORT JSON
+
+            </a>
+
+        </div>
+
+
+        <div class="grid">
+
+            ${metric(
+                "Contacts",
+                data.contacts_count
+            )}
+
+            ${metric(
+                "SMS",
+                data.sms_count
+            )}
+
+            ${metric(
+                "Applications",
+                data.packages_count
+            )}
+
+            ${metric(
+                "Running",
+                data.running_count
+            )}
+
+            ${metric(
+                "Flags",
+                data.suspicious_count
+            )}
+
+        </div>
+
+
+        ${block(
+            "Device",
+            [
+                data.evidence.device
+            ]
+        )}
+
+
+        ${block(
+            "Complete Evidence",
+            data.evidence
+        )}
+
+    `;
+}
+
+
+// ============================================================
+// INITIAL LOAD
+// ============================================================
+
+loadView(
+    "dashboard"
+);
+
+
+</script>
+
+
+</body>
+
+</html>
