@@ -1,22 +1,27 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask_cors import CORS
 
-from agent import adb_exists, device_status, collect_evidence, upload_evidence
-
+from agent import (
+    adb_exists,
+    device_status,
+    collect_evidence,
+    upload_evidence
+)
 
 app = Flask(__name__)
 
-CORS(
-    app,
-    resources={
-        r"/api/*": {
-            "origins": "*"
-        }
-    }
-)
+CORS(app)
 
 
-@app.get("/api/adb/status")
+@app.route("/")
+def home():
+    return jsonify({
+        "service": "Smart Cyber Forensic ADB Agent",
+        "status": "running"
+    })
+
+
+@app.route("/api/adb/status", methods=["GET"])
 def adb_status():
 
     if not adb_exists():
@@ -29,17 +34,16 @@ def adb_status():
             "offline_devices": 0,
             "devices": [],
             "error": (
-                "ADB is not installed or is not available in PATH."
+                "ADB is not installed or "
+                "ADB is not available in PATH."
             )
-        }), 200
+        })
 
-    return jsonify(
-        device_status()
-    )
+    return jsonify(device_status())
 
 
-@app.post("/api/adb/scan")
-def start_scan():
+@app.route("/api/adb/scan", methods=["POST"])
+def adb_scan():
 
     status = device_status()
 
@@ -65,32 +69,29 @@ def start_scan():
 
     return jsonify({
         "status": "completed",
+
         "result": result,
+
         "contacts": len(
             evidence["contacts"]
         ),
+
         "sms": len(
             evidence["sms"]
         ),
+
         "applications": len(
             evidence["packages"]
         ),
+
         "running": len(
             evidence["running_processes"]
         ),
+
         "suspicious": len(
             evidence["suspicious_package_flags"]
         )
     })
-
-
-@app.get("/")
-def home():
-
-    return {
-        "service": "Smart Cyber Forensic Local ADB Agent",
-        "status": "running"
-    }
 
 
 if __name__ == "__main__":
