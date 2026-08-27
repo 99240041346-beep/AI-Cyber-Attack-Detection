@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+forensic_output/
+agent_output/
+*.db
+*.sqlite3
+.DS_Store
