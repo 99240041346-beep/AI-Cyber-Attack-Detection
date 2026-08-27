@@ -1,48 +1,89 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Smart Cyber Forensic Pro</title><style>
-*{box-sizing:border-box}body{margin:0;background:#050814;color:#eaf2ff;font:14px Inter,Segoe UI,Arial}
-.login{min-height:100vh;display:grid;place-items:center;perspective:1400px;background:radial-gradient(circle at 50% 30%,#18346a,#050814 55%)}
-.card3d{width:440px;padding:38px;border:1px solid #36517e;border-radius:25px;background:#0b1326dd;box-shadow:0 35px 90px #000,0 0 70px #46e7ff16;transform:rotateX(5deg) rotateY(-3deg);backdrop-filter:blur(18px)}
-.logo{width:76px;height:76px;display:grid;place-items:center;border-radius:22px;background:linear-gradient(135deg,#46e7ff,#8d69ff);color:#06101b;font-weight:900;font-size:25px;box-shadow:0 0 35px #46e7ff55}
-h1{margin:18px 0 6px}.muted{color:#91a3c1}.field{margin:18px 0}.field label{display:block;margin-bottom:7px;color:#b9c9e3}.field input{width:100%;padding:13px;border-radius:11px;border:1px solid #253858;background:#060b16;color:#fff}.btn{width:100%;padding:14px;border:0;border-radius:11px;background:linear-gradient(90deg,#46e7ff,#7387ff);font-weight:900;cursor:pointer}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{background:#060b17;border-right:1px solid #223252;padding:20px}.brand{font-weight:900;font-size:17px;margin-bottom:30px}.brand b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#46e7ff,#8d69ff);color:#04101a;margin-right:8px}
-.nav button{width:100%;padding:12px;margin:3px 0;text-align:left;background:none;border:0;color:#91a3c1;border-radius:9px;cursor:pointer}.nav button:hover,.nav button.active{background:#111d35;color:#fff}.main{padding:26px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.pill{padding:7px 10px;border-radius:20px;background:#10253b;color:#46e7ff;font-size:11px}.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.box{background:#0c1528;border:1px solid #223252;border-radius:14px;padding:16px}.num{font-size:27px;font-weight:900;margin-top:5px}.section{margin-top:18px}.tablewrap{overflow:auto;border:1px solid #223252;border-radius:13px}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:11px;border-bottom:1px solid #1a2945;text-align:left}.table th{color:#8fa7cb;background:#091222}.click{color:#46e7ff;cursor:pointer}.warn{color:#ff617e;font-weight:800}.ok{color:#43df9e}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{padding:10px;background:#080f1d;border:1px solid #223252;color:white;border-radius:9px}.pre{white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto;background:#050a14;padding:14px;border-radius:9px}.hidden{display:none!important}
-@media(max-width:900px){.app{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid #223252}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;width:auto}.grid{grid-template-columns:repeat(2,1fr)}}
-</style></head><body>
-<div id="login" class="login"><div class="card3d"><div class="logo">SF</div><h1>Smart Cyber Forensic Pro</h1><div class="muted">Advanced Android evidence analysis console</div>
-<div class="field"><label>Analyst ID</label><input id="analyst" placeholder="Analyst"></div><div class="field"><label>Console passphrase</label><input id="password" type="password" placeholder="Passphrase"></div>
-<button class="btn" onclick="enter()">ENTER SECURE CONSOLE</button><p class="muted">Authorized forensic use only. USB/ADB acquisition is performed by the local agent.</p></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand"><b>SF</b>Forensic Pro</div><div class="nav">
-<button data-v="dashboard">◈ Dashboard</button><button data-v="devices">◉ ADB / Devices</button><button data-v="contacts">◎ Contacts</button><button data-v="sms">▣ SMS</button><button data-v="apps">◫ Applications</button><button data-v="runtime">◌ Runtime</button><button data-v="security">◇ Security</button><button data-v="cases">▤ Cases</button>
-</div></aside><main class="main"><div class="top"><div><h2 id="title">Command Dashboard</h2><div class="muted">Evidence-first Android cyber analysis</div></div><div class="pill">ADB AGENT • CLOUD CONSOLE</div></div><div id="view"></div></main></div>
-<script>
-let scans=[],selected=null;
-const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-async function api(u){let r=await fetch(u);if(!r.ok)throw Error(await r.text());return r.json()}
-function enter(){if(!$('analyst').value)return alert('Enter Analyst ID');$('login').classList.add('hidden');$('app').classList.remove('hidden');load('dashboard')}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>load(b.dataset.v));
-function metric(t,n){return `<div class="box"><div class="muted">${t}</div><div class="num">${n}</div></div>`}
-function table(a){if(!a.length)return '<div class="muted">No cases uploaded yet.</div>';return `<div class="tablewrap"><table class="table"><tr><th>Case</th><th>Device</th><th>Android</th><th>Contacts</th><th>SMS</th><th>Apps</th><th>Flags</th><th></th></tr>${a.map(x=>`<tr><td>${esc(x.case_id)}</td><td>${esc((x.manufacturer||'')+' '+(x.model||''))}</td><td>${esc(x.android)}</td><td>${x.contacts_count}</td><td>${x.sms_count}</td><td>${x.packages_count}</td><td class="${x.suspicious_count?'warn':'ok'}">${x.suspicious_count}</td><td><span class="click" onclick="openCase(${x.id})">OPEN</span></td></tr>`).join('')}</table></div>`}
-async function load(v){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v));$('title').textContent={dashboard:'Command Dashboard',devices:'ADB / Device Acquisition',contacts:'Contacts Intelligence',sms:'SMS Intelligence',apps:'Application Analysis',runtime:'Runtime & Surveillance Indicators',security:'Security Posture',cases:'Case History'}[v];try{
-if(v==='dashboard')return dashboard();if(v==='devices')return devices();if(v==='cases')return cases();if(v==='apps')return apps();if(v==='runtime')return runtime();if(v==='security')return security();return artifact(v)}
-catch(e){$('view').innerHTML=`<div class="box">Error: ${esc(e.message)}</div>`}}
-async function dashboard(){let s=await api('/api/stats');scans=await api('/api/scans');$('view').innerHTML=`<div class="grid">${metric('Scans',s.scans)}${metric('Contacts',s.contacts)}${metric('SMS',s.sms)}${metric('Applications',s.applications)}${metric('Running',s.running)}${metric('Triage Flags',s.suspicious)}</div><div class="section box"><h3>Recent cases</h3>${table(scans.slice(0,10))}</div>`}
-async function cases(){scans=await api('/api/scans');$('view').innerHTML=`<div class="box"><h3>Forensic case history</h3>${table(scans)}</div>`}
-async function devices(){scans=await api('/api/scans');$('view').innerHTML=`<div class="box"><h3>ADB acquisition</h3><p class="muted">Connect an authorized phone to the analyst workstation. Render cannot access your USB port directly.</p><pre class="pre">adb devices
+async function devices() {
+
+    scans = await api('/api/scans');
+
+    $('view').innerHTML = `
+        <div class="box">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:15px;
+                flex-wrap:wrap;
+            ">
+
+                <div>
+                    <h3>ADB Device Connection</h3>
+
+                    <div class="muted">
+                        Local forensic agent connection
+                    </div>
+                </div>
+
+                <div>
+
+                    <button
+                        class="btn"
+                        style="width:auto;padding:10px 18px"
+                        onclick="refreshADB()">
+
+                        🔄 Refresh ADB
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="adbStatus"
+                class="section">
+
+                <div class="box">
+
+                    <div class="muted">
+                        Checking ADB...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>ADB Setup</h3>
+
+            <pre class="pre">adb devices
+
 adb shell getprop ro.product.model
-adb shell getprop ro.build.version.release
-set FORENSIC_SERVER=https://YOUR-SERVICE.onrender.com
-set CASE_API_KEY=YOUR_RENDER_KEY
-python agent/agent.py</pre></div><div class="section box"><h3>Uploaded devices</h3>${table(scans)}</div>`}
-async function pick(){if(!scans.length)scans=await api('/api/scans');if(!selected&&scans.length)selected=scans[0].id;if(!selected)return null;return selected}
-async function artifact(v){let id=await pick();if(!id)return $('view').innerHTML='<div class="box">No scan uploaded.</div>';let type=v==='contacts'?'contacts':'sms';let key=type==='contacts'?'contacts':'sms';let d=await api(`/api/scans/${id}/${type}`);let arr=d[key]||[];$('view').innerHTML=`<div class="toolbar"><select onchange="selected=this.value;load('${v}')">${scans.map(x=>`<option value="${x.id}" ${x.id==id?'selected':''}>${esc(x.case_id)}</option>`).join('')}</select><input id="q" placeholder="Search..." oninput="filterArtifact()"></div><div class="box"><h3>${v.toUpperCase()} <span class="pill">${arr.length}</span></h3><div id="rows"></div></div>`;window.items=arr;renderArtifact(arr)}
-function renderArtifact(a){$('rows').innerHTML=a.length?`<div class="tablewrap"><table class="table"><tr><th>#</th><th>Record</th><th></th></tr>${a.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(typeof x==='string'?x:JSON.stringify(x))}</td><td><span class="click" onclick='detail(${JSON.stringify(x).replace(/</g,"\\\\u003c")})'>OPEN</span></td></tr>`).join('')}</table></div>`:'<div class="muted">No accessible records.</div>'}
-function filterArtifact(){let q=$('q').value.toLowerCase();renderArtifact(window.items.filter(x=>JSON.stringify(x).toLowerCase().includes(q)))}
-function detail(x){$('view').insertAdjacentHTML('beforeend',`<div class="section box"><h3>Record details</h3><pre class="pre">${esc(JSON.stringify(x,null,2))}</pre></div>`)}
-async function apps(){let id=await pick();if(!id)return $('view').innerHTML='<div class="box">No scan uploaded.</div>';let d=await api(`/api/scans/${id}/applications`);$('view').innerHTML=`<div class="grid">${metric('Applications',d.count)}${metric('Heuristic flags',d.suspicious.length)}</div><div class="section box"><h3>Installed applications</h3><pre class="pre">${esc(JSON.stringify(d.applications,null,2))}</pre></div><div class="section box"><h3>Suspicious indicators</h3><pre class="pre">${esc(JSON.stringify(d.suspicious,null,2))}</pre><div class="muted">Indicators require analyst validation; package names alone do not prove malware.</div></div>`}
-async function runtime(){let id=await pick();if(!id)return $('view').innerHTML='<div class="box">No scan uploaded.</div>';let d=await api(`/api/scans/${id}/analysis`);$('view').innerHTML=`<div class="grid">${metric('Running',d.running_processes.length)}${metric('Accessibility',d.accessibility_services.length)}${metric('Device admins',d.device_admins.length)}${metric('Network',d.network_connections.length)}${metric('Findings',d.findings.length)}</div>${blk('Running processes',d.running_processes)}${blk('Accessibility services',d.accessibility_services)}${blk('Device admins',d.device_admins)}${blk('Network connections',d.network_connections)}${blk('Findings',d.findings)}${blk('Collection errors',d.errors)}`}
-function blk(t,a){return `<div class="section box"><h3>${t} <span class="pill">${a.length}</span></h3><pre class="pre">${esc(JSON.stringify(a,null,2))}</pre></div>`}
-async function security(){let id=await pick();if(!id)return $('view').innerHTML='<div class="box">No scan uploaded.</div>';let d=await api(`/api/scans/${id}/analysis`),x=d.device||{};$('view').innerHTML=`<div class="grid">${metric('Android',x.android||'N/A')}${metric('Patch',x.security_patch||'N/A')}${metric('SELinux',x.selinux||'N/A')}${metric('Verified Boot',x.verified_boot||'N/A')}${metric('Encryption',x.encryption||'N/A')}</div>${blk('Device security properties',[x])}${blk('Analyst findings',d.findings)}`}
-async function openCase(id){selected=id;let x=await api('/api/scans/'+id);$('title').textContent='Case '+x.case_id;$('view').innerHTML=`<div class="toolbar"><span class="click" onclick="load('cases')">← CASES</span><a class="smallbtn" href="/api/scans/${id}/export">EXPORT JSON</a></div><div class="grid">${metric('Contacts',x.contacts_count)}${metric('SMS',x.sms_count)}${metric('Apps',x.packages_count)}${metric('Running',x.running_count)}${metric('Flags',x.suspicious_count)}</div>${blk('Device', [x.evidence.device])}${blk('Complete evidence',[x.evidence])}`}
-load('dashboard');
-</script></body></html>
+
+adb shell getprop ro.build.version.release</pre>
+
+        </div>
+
+
+        <div class="section box">
+
+            <h3>Previously Acquired Devices</h3>
+
+            ${table(scans)}
+
+        </div>
+    `;
+
+    await refreshADB();
+
+    if (window.adbRefreshTimer) {
+        clearInterval(window.adbRefreshTimer);
+    }
+
+    window.adbRefreshTimer = setInterval(
+        refreshADB,
+        5000
+    );
+}
